@@ -1,95 +1,46 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import "molstar/lib/mol-plugin-ui/skin/light.scss";
+import { useEffect, createRef } from "react";
+import { createPluginUI } from "molstar/lib/mol-plugin-ui";
+import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
+import { renderReact18 } from "molstar/lib/mol-plugin-ui/react18";
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+declare global {
+  interface Window {
+    molstar?: PluginUIContext;
+  }
 }
+
+const MolStarWrapper = () => {
+  const parent = createRef<HTMLDivElement>();
+
+  useEffect(() => {
+    const init = async () => {
+      // window.molstar = await createPlugin(parent.current as HTMLDivElement);
+      const obj = await createPluginUI({
+        target: parent.current as HTMLDivElement,
+        render: renderReact18,
+      });
+    };
+    init();
+
+    // return () => {
+    //   window.molstar?.dispose();
+    //   window.molstar = undefined;
+    // };
+    // }, [parent, taskId]);
+  }, [parent]);
+
+  return (
+    <div>
+      <div
+        className="h-svh w-svh"
+        ref={parent}
+        style={{ position: "relative" }}
+      />
+    </div>
+  );
+};
+
+export default MolStarWrapper;
